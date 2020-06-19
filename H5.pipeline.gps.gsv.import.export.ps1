@@ -4,13 +4,12 @@ gsv | export-clixml refsv.xml;
 gsv | where-object {$_.StartType -eq "Manual"}; start-service Xbox* -c
 # en stop even de ‘Print Spooler’ 
 get-service -n sp*; stop-service spooler
-<# Gebruik nu het Compare-Object (Diff) commando om het referentiebestand te vergelijken
-met de huidige situatie van de services. Je zal bij de property parameter meer dan 1 gegeven
-moeten opgeven. Bekijk eens hoe dit moet gedaan worden. #>
+<# Gebruik Compare-Object (Diff) commando om het ref te vergelijken met de huidige situatie van de services. 
+bij de property parameter meer dan 1 gegeven opgeven: #>
 diff -r refsv.xml -d (gsv) -p status,name
 
-<# 2. Wat zou er gebeuren als je volgende uitvoert: Get-Service | Export-CSV
-services.csv | Out-File lijst.txt ? Waarom krijg je dat resulaat? #>
+# 2. Wat gebeurt er: 
+Get-Service | Export-CSV services.csv | Out-File lijst.txt
 write-out "txt is leeg want export-csv geeft geen resultaat naar het scherm"
 
 <# 3. Je kan een lijst van services opvragen en via piping doorgeven aan Stop-service. Dit om
