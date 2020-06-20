@@ -1,20 +1,17 @@
-# 1. Maak een CliXML referentiebestand aan met daarin de gegevens van de services van je toestel. 
+# 1. rapporteer de gegevens vd services van je toestel in xml als referentie. 
 gsv | export-clixml refsv.xml;
-# Pas nu voor enkele services de status aan: start een service waarvoor de startup op manueel staat 
+# start een service waarvoor de startup op manueel staat + stop ‘Print Spooler’
 gsv | where-object {$_.StartType -eq "Manual"}; start-service Xbox* -c
-# en stop even de ‘Print Spooler’ 
 get-service -n sp*; stop-service spooler
-<# Gebruik Compare-Object (Diff) commando om het ref te vergelijken met de huidige situatie van de services. 
-bij de property parameter meer dan 1 gegeven opgeven: #>
+<# Gebruik Compare-Object/Diff commando om het ref te vergelijken met de huidige situatie vd services. 
+bij -property parameter meer dan 1 gegeven opgeven: #>
 diff -r refsv.xml -d (gsv) -p status,name
 
 # 2. Wat gebeurt er: 
 Get-Service | Export-CSV services.csv | Out-File lijst.txt
 write-out "txt is leeg want export-csv geeft geen resultaat naar het scherm"
 
-<# 3. Je kan een lijst van services opvragen en via piping doorgeven aan Stop-service. Dit om
-deze services te stoppen. Welke andere manieren heb je nog om een service te stoppen, zou
-je het ook kunnen zonder gebruik te maken van Get-service? #>
+<# 3. Welke manieren heb je om een service te stoppen? #>
 gsv -n abc | stop-service
 spsv abc
 
