@@ -17,5 +17,6 @@ get-hot | where {$_.description -eq "security update"}
 # 4. get all update hotfix installed by Administrator:
 get-hot | where {$_.description -eq "update" -and $_.Installedby -eq "name_of_admin"}
 
-# 5. get all conhost & svchost processes, tip: no where
+# 5. get all conhost & svchost processes: 
 gps -name conhost,svchost
+get-service # can filter -name, no where  needed
