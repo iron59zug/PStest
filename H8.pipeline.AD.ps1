@@ -3,21 +3,21 @@
 ipcsv c:\path\to\file.csv | Select-Object *, @{l='label';e={$_.expression}} | new-ADuser -path 'ou=MyOU,DC=me,DC=local'
 # => create new column/property 'label', w/ value from expression column
 
-# vb/1. get-hot -com verwacht string, get-adc geeft ADcomputer-type met Name-property als string:
-get-hotfix –computername (get-adcomputer –filter * -searchbase `
-“ou=domain controllers, dc=opleidingen, dc=intra” | select-object –expandproperty name)
-# vb/2. FOUT: get-hot aanvaardt geen ADcomputer-type via pipeline:
-Get-adcomputer –filter * -searchbase “ou=domain controllers,dc=opleidingen,dc=intra” | Get-Hotfix
+# get pc_names to pipeline:
+Get-ADComputer –filter * -searchbase ’ou=some_ou,dc=some_dc,dc=local’ | Select-Object –ExpandProperty Name
+
+# eg.1 get-hot -com expect string, get-adc give ADcomputer-type w/ Name-property as string:
+get-hotfix –computername (get-adcomputer –filter * -searchbase “ou=...,dc=...” | select-object –expand name)
+# eg.2 WRONG: get-hot accept NO ADcomputer-type via pipeline:
+Get-adc –filter * -searchbase “ou=some_ou,dc=some_dc,dc=intra” | Get-Hotfix
 help get-hotfix -full
 
-# vb/3. get-adc geeft ADcomp-type door, select haalt en hernoemt Name-property-string tot computername-property-string
-get-adcomputer –filter * -searchbase “ou=domain controllers,dc=opleidingen,dc=intra” | 
-select-object @{l=’computername’;e={$_.name}} | get-hotfix
+# eg.3 get-adc give ADcomp-type, select get+rename Name-property-string to computername-property-string
+get-adc –filter * -searchbase “ou=myOU,dc=me,dc=net” | select @{l=’computername’;e={$_.name}} | get-hotfix
 
-# vb/4. FOUT: select geeft een string door maar get-wmi -class aanvaardt niets via pipeline
-Get-adcomputer –filter * -searchbase “ou=domain controllers,dc=opleidingen,dc=intra” |
-Select-Object @{l=’computername’;e={$_.name}} | Get-WmiObject –class Win32_BIOS
+# eg.4 WRONG: select give string but get-wmi -class accept NO pipeline input
+Get-adc –filter * -searchbase “...ou,dc...” | Select @{l=’computername’;e={$_.name}} | Get-WmiObject –class Win32_BIOS
 
-# 5. overzicht van alle lopende processen op alle computers in een AD
-gps -com (get-adc -filter * | selec -exp name)
-get-adc | select –expandproperty name | gps # to verify
+# eg.5 list all running processes on all PCs in an AD
+gps -com (get-adc -filter * | selec -exp name) # idea 1 ok
+get-adc | select –expandproperty name | gps # idea 2 to verify
