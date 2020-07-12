@@ -1,3 +1,4 @@
+# Win Mgmt Instrumentation on Common Information Model std; namespace > class > instance
 # gwmi: [–namespace root\cimv2] = default path, [-class/-property] = position 1
 Get-wmiobject –namespace root\cimv2 –class win32_desktop # == gwmi win32_desktop 
 # WMI explorer, FOSS+portable: wmie2, Sapien: CIM Explorer
