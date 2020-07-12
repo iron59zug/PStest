@@ -3,8 +3,9 @@
 ipcsv c:\path\to\file.csv | Select-Object *, @{l='label';e={$_.expression}} | new-ADuser -path 'ou=MyOU,DC=me,DC=local'
 # => create new column/property 'label', w/ value from expression column
 
-# get pc_names to pipeline:
+# @DC server get pc_names to pipeline:
 Get-ADComputer –filter * -searchbase ’ou=some_ou,dc=some_dc,dc=local’ | Select-Object –ExpandProperty Name
+# if @client w/ RSAT, need import AD module first:> ipmo ActiveDirectory
 
 # eg.1 get-hot -com expect string, get-adc give ADcomputer-type w/ Name-property as string:
 get-hotfix –computername (get-adcomputer –filter * -searchbase “ou=...,dc=...” | select-object –expand name)
