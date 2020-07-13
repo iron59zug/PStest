@@ -1,5 +1,6 @@
 # epal alias.ps5.1.18362.752.csv
-"alias","full-cmd"," ","scope"
+# Date: 13-jul-2020
+
 "foreach","ForEach-Object","","ReadOnly, AllScope"
 "%","ForEach-Object","","ReadOnly, AllScope"
 "where","Where-Object","","ReadOnly, AllScope"
