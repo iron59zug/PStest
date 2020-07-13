@@ -1,5 +1,5 @@
-      CommandType Name    ResolvedCommandName                       Options Version Source                         
------------ ----    -------------------                       ------- ------- ------                         
+ CommandType Name    ResolvedCommandName                       Options Version Source                         
+ ----------- ----    -------------------                       ------- ------- ------                         
       Alias %       ForEach-Object                 ReadOnly, AllScope                                        
       Alias ?       Where-Object                   ReadOnly, AllScope                                        
       Alias ac      Add-Content                    ReadOnly, AllScope                                        
