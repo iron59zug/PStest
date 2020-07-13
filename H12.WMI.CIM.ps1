@@ -21,7 +21,7 @@ icm -sc {Get-CimInstance class_name} -comp rPC_name -cr nw\admin_name
 get-cimclass -n root\space_name # eg. root\Cimv2
 
 #eg.1 which class for finding the ip of an NIC, can it handle DHCP refresh?
-class: \\IP32015IKB\ROOT\CIMV2:Win32_NetworkAdapterConfiguration
+class: \\pcName\ROOT\CIMV2:Win32_NetworkAdapterConfiguration
 method: RenewDHCPLease 
 
 #eg.2 get services & show name, status, startup mod, user; tip: gsv cannot get startup mod
