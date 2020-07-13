@@ -1,4 +1,3 @@
-# epal alias.ps5.1.18362.752.csv
 "foreach","ForEach-Object","","ReadOnly, AllScope"
 "%","ForEach-Object","","ReadOnly, AllScope"
 "where","Where-Object","","ReadOnly, AllScope"
