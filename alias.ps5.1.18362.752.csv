@@ -1,3 +1,4 @@
+"alias","full-cmd"," ","scope"
 "foreach","ForEach-Object","","ReadOnly, AllScope"
 "%","ForEach-Object","","ReadOnly, AllScope"
 "where","Where-Object","","ReadOnly, AllScope"
