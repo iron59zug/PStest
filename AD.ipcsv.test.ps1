@@ -1,43 +1,68 @@
 # ipcsv, new ou, new gg, add user
 
-Import-Module ActiveDirectory
 param (
-    $csvpath = 'H:\GebruikerslijstChoco.csv',
-    $users = Import-Csv $csvpath -Delimiter ';',
-    $addn = (Get-ADDomain).DistinguishedName,
-    $ou0 = Choco )
-New-ADOrganizationalUnit -Name $ou0 -path $addn -WhatIf
-$newou2 = Get-ADOrganizationalUnit -Filter 'name -like "$ou0"' -property name # idea2
-$newou1 = (Get-ADOrganizationalUnit -Filter 'name -like "$ou0"').DistinguishedName # idea1
+    $csvpath = "$psscriptroot\path\to.csv",
+    $delimiter = ';',
+    $root = 'Choco',
+    $defaultpw = "${root}1234")
 
+Clear-Host
+Import-Module ActiveDirectory
+$users = Import-Csv $csvpath -Delimiter $delimiter
+Write-Output "`nusers imported from $csvpath"
+
+
+$addn = (Get-ADDomain).DistinguishedName 
+New-ADOrganizationalUnit -Name $root -path $addn -ProtectedFromAccidentalDeletion $false
+$rdn = (Get-ADOrganizationalUnit -Filter 'name -like $root').DistinguishedName
+Write-Output "root OU created: $rdn `n"
+
+
+$ggr = "GG_$root"
+New-ADGroup -Name $ggr -DisplayName "GG everyone" -GroupCategory Security -GroupScope Global `
+    -Description "everybody from csv"
+$ggrdn = (Get-ADGroup -Filter 'name -like $ggr').DistinguishedName
+Write-Output "`nGG $root created: $ggrdn`n"
+
+
+$accpw = ConvertTo-SecureString $defaultpw -AsPlainText -Force
 foreach ($user in $users) {
-    $dep = $user.Department 
-    $oudc = $user.Path
-New-ADOrganizationalUnit -Name $dep -path $newou -WhatIf }
-
-foreach ($user in $company) {
     $name = $user.Name
-    $sname = $user.Surename
-    $gname = $user.GivenName
-    $uname = $user.sAMAccountName
+	$sname = $user.Surename
+   	$gname = $user.GivenName
+	$uname = $user.sAMAccountName
     $title = $user.Title
     $dep = $user.Department  
     $company = $user.Company
     $upname = $user.userPrincipalName
     $mail = $user.Mail
-    $oudc = $user.Path
-        
-New-ADOrganizationalUnit -Name $dep -path $oudc -WhatIf
 
-New-ADUser -SamAccountName $uname -UserPrincipalName $upname `
-    -Name $name -Surname $sname -GivenName $gname -Title $title `
-    -Department $dep -Company $company -EmailAddress $mail `
-    -path $oudc -WhatIf
 
-New-ADGroup -Name "GG$dep" -GroupCategory Security -GroupScope Global -WhatIf 
-New-ADGroup -Name "GGall" -GroupCategory Security -GroupScope Global -WhatIf 
+    $ddn = (Get-ADOrganizationalUnit -Filter 'name -like $dep').DistinguishedName
+    if ($ddn -eq $null){
+        New-ADOrganizationalUnit -Name $dep -path $rdn -ProtectedFromAccidentalDeletion $false
+        Write-Output "OU $dep created"}
+        else {Write-Output "OU $dep exists: $ddn"}
+# $ddn and $ggddn work differently ???
+    $ggd = "GG_$dep"
+    $ggddn = (Get-ADGroup -Filter 'name -like $ggd').DistinguishedName
+    if ($ggddn -eq $null){
+        New-ADGroup -Name $ggd -GroupCategory Security -GroupScope Global
+        $ggddn = (Get-ADGroup -Filter 'name -like $ggd').DistinguishedName # why extra line needed?
+        Write-Output "GG $dep created"}
+        else {Write-Output "GG $dep exists: $ggddn"}
 
-Add-ADGroupMember -Identity "GGall" -Members $uname -WhatIf
+
+    $path = (Get-ADOrganizationalUnit -Filter 'name -like $dep').DistinguishedName
+    New-ADUser  -SamAccountName $uname -UserPrincipalName $upname `
+        -Name $name -Surname $sname -GivenName $gname -Title $title `
+        -Department $dep -Company $company -EmailAddress $mail `
+        -path $path -AccountPassword $accpw -Enabled $true
+    Write-Output "$uname account ready"
+
+    
+    Add-ADGroupMember -Identity $ggddn -Members $uname
+    Add-ADGroupMember -Identity $ggrdn -Members $uname
+    Write-Output "joined $ggr, $ggd `n"
 }
 
-Add-ADGroupMember -Identity "GG$dep" -Members -WhatIf
