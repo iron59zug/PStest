@@ -1,5 +1,5 @@
 # 2. get application logs, group by day of week
-
+Get-EventLog Application | Group-Object {$_.Timewritten.DayOfWeek} # works
 Get-EventLog Application | ft Index,@{l='DoW';e={$_.TimeGenerated.DayOfWeek}},TimeGenerated,Message -GroupBy {$_.TimeGenerated.DayOfWeek}
 # NOT OK
 
