@@ -1,10 +1,19 @@
 #! /bin/bash
 
 """
+the .bashrc file:
+- a shell script to initialize a interactive shell session
+- store & load the terminal preferences and environmental variables
+- for run once/non-interactive shell, use: 
+~/.profile #debian/ubuntu
+~/.bash_profile #
+"""
+
+"""
 system wide setting:
 /etc/skel/.bashrc # default setting when creating new user
 /etc/bash.bashrc # debian/ubuntu setting
-/etc/bashrc # ???
+/etc/.bashrc # ???
 
 individual user setting:
 /root/.bashrc # root user
@@ -25,8 +34,9 @@ $ source ~/.bash_aliases
 """
 
 # ~/.bash_aliases
-alias ..='cd..'
 alias aptu='apt update && apt upgrade'
+alias ..='cd..'
+alias cs='cd;ls'
 
 alias la='ls -a'
 alias las='ls -as'
